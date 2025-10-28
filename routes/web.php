@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AccesoController;
 use App\Http\Controllers\Auth\UsuarioController;
 use App\Http\Controllers\TipoController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,13 +32,4 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::resource('tipos', TipoController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
-});
-Route::get('/', [AccesoController::class, 'mostrarFormulario'])->name('acceso');
-Route::post('/login', [AccesoController::class, 'iniciarSesion'])->name('login');
-Route::post('/login', [AccesoController::class, 'iniciarSesion'])->name('login');
-Route::post('/logout', [AccesoController::class, 'cerrarSesion'])->name('logout');
-
-// Rutas protegidas
-Route::middleware('auth')->group(function(){
-    Route::resource('usuarios', UsuarioController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 });
