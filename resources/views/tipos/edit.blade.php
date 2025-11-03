@@ -13,7 +13,7 @@
                         <i class="bi bi-pencil-square me-2"></i>
                         Editar Tipo de Usuario
                     </h2>
-                    <p class="text-muted mb-0">Modifica la información del tipo de usuario: <strong>{{ $tipo->tipo }}</strong></p>
+                    <p class="text-muted mb-0">Modifica el tipo de usuario: <strong>{{ $tipo->tipo }}</strong></p>
                 </div>
                 <div>
                     <a href="{{ route('tipos.index') }}" class="btn btn-secondary">
@@ -40,16 +40,16 @@
                                 
                                 <div class="mb-4">
                                     <label for="tipo" class="form-label fw-semibold">
-                                        <i class="bi bi-person-badger text-primary me-1"></i>
+                                        <i class="bi bi-person-badge text-primary me-1"></i>
                                         Nombre del Tipo <span class="text-danger">*</span>
                                     </label>
                                     <input
                                         type="text"
-                                        class="form-control form-control-lg @error('tipo') is-invalid @enderror"
+                                        class="form-control @error('tipo') is-invalid @enderror"
                                         id="tipo"
                                         name="tipo"
                                         value="{{ old('tipo', $tipo->tipo) }}"
-                                        placeholder="Ej. admin, profesor, estudiante, etc..."
+                                        placeholder="Ej: admin, profesor, estudiante, etc..."
                                         maxlength="50"
                                         required
                                     >
@@ -86,20 +86,20 @@
                                             data-tipo="invitado"
                                         >invitado</button>
                                     </div>
-                                    <small class="text-muted">Haz click en cualquier boton ejemplo para usarlo</small>
+                                    <small class="text-muted">Haz clic en cualquier boton ejemplo para usarlo</small>
                                 </div>
                                 <div class="mb-4" id="previewTipo" style="display: none;">
-                                    <label class="form-label fw-semibold">Vista Previa:</label>
-                                    <div id="badgePreview"> </div>
+                                    <label class="form-label fw-semibold">Vista previa:</label>
+                                    <div id="badgePreview"></div>
                                 </div>
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('tipos.index') }}" class="btn btn-outline-secondary">
+                                    <a href="{{ route('tipos.index') }}" class="btn btn-secondary">
                                         <i class="bi bi-x-circle me-1"></i>
                                         Cancelar
                                     </a>
                                     <button type="submit" class="btn btn-warning" id="btnActualizar">
                                         <i class="bi bi-check-circle me-1"></i>
-                                        Actualizar tipo
+                                        Actualizar Tipo
                                     </button>
                                 </div>
                             </form>
@@ -123,11 +123,41 @@
             btn.html('<i class="bi bi-check-circle me-1"></i> Actualizar Usuario').prop("disabled", false);
         }
     }
+    function actualizarPreview(tipo){
+        const preview = $("#previewTipo");
+        const badgePreview = $("#badgePreview");
+        
+        if( tipo.trim() ){
+            // Determinar color del badge según el tipo
+            let colorClass = "bg-secondary";
+            if(tipo.toLowerCase() === "admin") colorClass = "bg-danger";
+            else if(tipo.toLowerCase() === "profesor") colorClass = "bg-success";
+            else if(tipo.toLowerCase() === "estudiante") colorClass = "bg-primary";
+            else if(tipo.toLowerCase() === "coordinador") colorClass = "bg-warning";
+            
+            const badge = `<span class="badge ${colorClass} fs-6">
+                <i class="bi bi-person-badge me-1"></i>${tipo}
+            </span>`;
+            
+            badgePreview.html(badge);
+        }
+        else{
+            badgePreview.html('<span class="text-muted">Ingresa un tipo para ver la vista previa</span>');
+        }
+    }
 </script>
 @endpush
 
 @push('JSOR')
-    // Manejo del formulario
+    actualizarPreview( $("#tipo").val() );
+    $("#tipo").on("input", function(){
+        actualizarPreview( $(this).val() );
+    });
+    $(".ejemplo-tipo").on("click", function(){
+        const tipo = $(this).data("tipo");
+        $("#tipo").val(tipo);
+        actualizarPreview( tipo );
+    });
     $("#formEditarTipo").on("submit", function(e){
         e.preventDefault();
         cambiarEstadoBoton(true);
@@ -165,5 +195,5 @@
         });
     });
     
-    console.log("Vista editar tipo cargada");
+    console.log("Vista editar usuario cargada");
 @endpush

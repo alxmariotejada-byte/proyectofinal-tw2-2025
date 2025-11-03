@@ -5,25 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\Tipo;
+use App\Models\Materia;
 
-class TipoController extends Controller
+class MateriaController extends Controller
 {
     public function index(){
-        $tipos = Tipo::all();
-        return view('tipos.index', compact('tipos'));
+        $materias = Materia::all();
+        return view('materias.index', compact('materias'));
     }
     public function create(){
-        return view('tipos.create');
+        return view('materias.create');
     }
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'tipo' => 'required|string|max:50|unique:tipos'
-        ],
-        [
-            'tipo.required' => 'El tipo es obligatorio.',
-            'tipo.max' => 'El tipo no puede tener más de 50 caracteres.',
-            'tipo.unique' => 'Este tipo ya existe.'
+            'nombre' => 'required|string|max:255|unique:materias'
+        ], [
+            'nombre.required' => 'El nombre de la materia es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'nombre.unique' => 'Esta materia ya existe.'
         ]);
         if( $validator->fails() ){
             if( $request->ajax() ){
@@ -36,47 +35,46 @@ class TipoController extends Controller
             ->back()
             ->withErrors($validator)
             ->withInput();
-        }  
+        }
         try{
-            Tipo::create([
-                'tipo' => $request->tipo
+            Materia::create([
+                'nombre' => $request->nombre
             ]);
             if( $request->ajax() ){
                 return response()->json([
                     'success' => true,
-                    'message' => 'Tipo creado correctamente'
+                    'message' => 'Materia creada correctamente'
                 ]);
             }
             return redirect()
-            ->route('tipos.index')
-            ->with('success', 'Tipo creado correctamente');
+            ->route('materias.index')
+            ->with('success', 'Materia creada correctamente');
         }
         catch( \Exception $e ){
-            if ($request->ajax()) {
+            if( $request->ajax() ){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al crear el tipo'
+                    'message' => 'Error al crear la materia'
                 ], 500);
             }
             return redirect()
             ->back()
-            ->with('error', 'Error al crear el tipo')
+            ->with('error', 'Error al crear la materia')
             ->withInput();
         }
     }
     public function edit($id){
-        $tipo = Tipo::findOrFail($id);
-        return view('tipos.edit', compact('tipo'));
+        $materia = Materia::findOrFail($id);
+        return view('materias.edit', compact('materia'));
     }
     public function update(Request $request, $id){
-        $tipo = Tipo::findOrFail($id);
+        $materia = Materia::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'tipo' => 'required|string|max:50|unique:tipos'
-        ],
-        [
-            'tipo.required' => 'El tipo es obligatorio.',
-            'tipo.max' => 'El tipo no puede tener más de 50 caracteres.',
-            'tipo.unique' => 'Este tipo ya existe.'
+            'nombre' => 'required|string|max:255|unique:materias,nombre,' . $id
+        ], [
+            'nombre.required' => 'El nombre de la materia es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 255 caracteres.',
+            'nombre.unique' => 'Esta materia ya existe.'
         ]);
         if( $validator->fails() ){
             if( $request->ajax() ){
@@ -89,54 +87,46 @@ class TipoController extends Controller
             ->back()
             ->withErrors($validator)
             ->withInput();
-        }  
+        }
         try{
-            $tipo->update([
-                'tipo' => $request->tipo
+            $materia->update([
+                'nombre' => $request->nombre
             ]);
             if( $request->ajax() ){
                 return response()->json([
                     'success' => true,
-                    'message' => 'Tipo actualizado correctamente'
+                    'message' => 'Materia actualizada correctamente'
                 ]);
             }
             return redirect()
-            ->route('tipos.index')
-            ->with('success', 'Tipo actualizado correctamente');
+            ->route('materias.index')
+            ->with('success', 'Materia actualizada correctamente');
         }
         catch( \Exception $e ){
-            if ($request->ajax()) {
+            if( $request->ajax() ){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al actualizar el tipo'
+                    'message' => 'Error al actualizar la materia'
                 ], 500);
             }
             return redirect()
             ->back()
-            ->with('error', 'Error al actualizar el tipo')
+            ->with('error', 'Error al actualizar la materia')
             ->withInput();
         }
     }
     public function destroy($id){
         try{
-            $tipo = Tipo::findOrFail($id);
-
-            if( $tipo->users()->count() > 0){
-                return redirect()
-                ->route('tipos.index')
-                ->with('error','No se puede eliminar el tipo de usuarios asignados');
-            }
-            
-            $tipo->delete();
-              
+            $materia = Materia::findOrFail($id);  
+            $materia->delete();  
             return redirect()
-            ->route('tipos.index')
-            ->with('success', 'Tipo eliminado correctamente');  
+            ->route('materias.index')
+            ->with('success', 'Materia eliminada correctamente');
         }
         catch( \Exception $e ){
             return redirect()
-            ->route('tipos.index')
-            ->with('error', 'Error al eliminar el tipo');
+            ->route('materias.index')
+            ->with('error', 'Error al eliminar la materia');
         }
     }
 }
