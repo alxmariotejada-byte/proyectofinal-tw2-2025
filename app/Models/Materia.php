@@ -13,6 +13,7 @@ class Materia extends Model
     protected $fillable = [
         'nombre'
     ];
+    
     public function materiasXUsuarios(){
         return $this->hasMany(MateriaXUsuario::class, 'materias_id');
     }  

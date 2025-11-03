@@ -51,53 +51,53 @@
                                         placeholder="Ej: admin, profesor, estudiante, etc..."
                                         maxlength="50"
                                         required
-                                >
-                                @error('tipo')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror  
+                                    >
+                                    @error('tipo')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">Ejemplos comunes:</label>
                                     <div>
                                         <button
                                             type="button"
-                                            class="btn btn-sm btn-outline-success ejemplo-tipo"
+                                            class="btn btn-sm btn-outline-primary ejemplo-tipo"
                                             data-tipo="admin"
-                                            >admin</button>
-                                            <button
+                                        >admin</button>
+                                        <button
                                             type="button"
                                             class="btn btn-sm btn-outline-success ejemplo-tipo"
                                             data-tipo="profesor"
-                                            >profesor</button>
-                                            <button
+                                        >profesor</button>
+                                        <button
                                             type="button"
                                             class="btn btn-sm btn-outline-info ejemplo-tipo"
                                             data-tipo="estudiante"
-                                            >estudiante</button>
-                                            <button
+                                        >estudiante</button>
+                                        <button
                                             type="button"
                                             class="btn btn-sm btn-outline-warning ejemplo-tipo"
                                             data-tipo="coordinador"
-                                            >coordinador</button>
-                                            <button
+                                        >coordinador</button>
+                                        <button
                                             type="button"
                                             class="btn btn-sm btn-outline-secondary ejemplo-tipo"
                                             data-tipo="invitado"
-                                            >invitado</button>
+                                        >invitado</button>
                                     </div>
-                                    <small class="text-muted">Haz click en cualquier boton para usarlo</small>
+                                    <small class="text-muted">Haz clic en cualquier boton ejemplo para usarlo</small>
                                 </div>
                                 <div class="mb-4" id="previewTipo" style="display: none;">
                                     <label class="form-label fw-semibold">Vista previa:</label>
                                     <div id="badgePreview"></div>
                                 </div>
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a href="" class="btn-secondary">
-                                        <i class="bi bi-xcircle me-1"></i>
-                                        cancelar
+                                    <a href="{{ route('tipos.index') }}" class="btn btn-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Cancelar
                                     </a>
                                     <button type="submit" class="btn btn-success" id="btnGuardar">
-                                        <i class="bi bi-x-circle me-1"></i>
+                                        <i class="bi bi-check-circle me-1"></i>
                                         Crear Tipo
                                     </button>
                                 </div>
@@ -122,17 +122,41 @@
             btn.html('<i class="bi bi-check-circle me-1"></i> Crear Usuario').prop("disabled", false);
         }
     }
+    function actualizarPreview(tipo){
+        const preview = $("#previewTipo");
+        const badgePreview = $("#badgePreview");
+        
+        if( tipo.trim() ){
+            // Determinar color del badge según el tipo
+            let colorClass = "bg-secondary";
+            if(tipo.toLowerCase() === "admin") colorClass = "bg-danger";
+            else if(tipo.toLowerCase() === "profesor") colorClass = "bg-success";
+            else if(tipo.toLowerCase() === "estudiante") colorClass = "bg-primary";
+            else if(tipo.toLowerCase() === "coordinador") colorClass = "bg-warning";
+            
+            const badge = `<span class="badge ${colorClass} fs-6">
+                <i class="bi bi-person-badge me-1"></i>${tipo}
+            </span>`;
+            
+            badgePreview.html(badge);
+            preview.slideDown();
+        }
+        else{
+            preview.slideUp();
+        }
+    }
 </script>
 @endpush
 
 @push('JSOR')
     $("#tipo").on("input", function(){
-        //
+        actualizarPreview($(this).val());
     });
     $(".ejemplo-tipo").on("click", function(){
-        //
+        const tipo = $(this).data("tipo");
+        $("#tipo").val(tipo).trigger("input");
     });
-
+    
     // Manejo del formulario
     $("#formCrearTipo").on("submit", function(e){
         e.preventDefault();
@@ -144,7 +168,7 @@
             success: function(response){
                 Swal.fire({
                     icon: "success",
-                    title: "¡Usuario creado!",
+                    title: "Tipo creado!",
                     text: "El tipo de usuario se ha creado correctamente",
                     timer: 1500,
                     showConfirmButton: false,
