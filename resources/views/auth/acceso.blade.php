@@ -28,7 +28,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="row g-0 login-card">
-                    <div class="col-md-6 d-flex align-items-center justify-content-center brand-section text-white p-5">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center brand-section text-black p-5">
                         <div class="text-center">
                             <h1 class="display-4 mb-4">
                                 <i class="bi bi-mortarboard-fill"></i>
