@@ -12,9 +12,11 @@ class Tipo extends Model
 
     protected $table = 'tipos';
 
-    protected $fillable = ['tipo'];
+    protected $fillable = [
+        'tipo'
+    ];
 
     public function users(){
-         return $this->hasMany(User::class, 'tipos_id');
+        return $this->hasMany(User::class, 'tipos_id');
     }
 }
