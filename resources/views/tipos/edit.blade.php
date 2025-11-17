@@ -30,7 +30,7 @@
                         <div class="card-header bg-warning text-dark">
                             <h5 class="mb-0">
                                 <i class="bi bi-person-fill me-2"></i>
-                                Información del Tipo
+                                Información del tipo de usuario
                             </h5>
                         </div>
                         <div class="card-body">
@@ -41,7 +41,7 @@
                                 <div class="mb-4">
                                     <label for="tipo" class="form-label fw-semibold">
                                         <i class="bi bi-person-badge text-primary me-1"></i>
-                                        Nombre del Tipo <span class="text-danger">*</span>
+                                       Nombre del tipo de usuario <span class="text-danger">*</span>
                                     </label>
                                     <input
                                         type="text"
